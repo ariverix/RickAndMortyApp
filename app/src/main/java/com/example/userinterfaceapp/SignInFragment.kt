@@ -10,10 +10,9 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 
-class SignInFragment : Fragment() {
+class SignInFragment : BaseFragment() {
 
     private lateinit var dbHelper: DBHelper
     private lateinit var userInfoText: TextView
@@ -23,13 +22,12 @@ class SignInFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("SignInFragment", "onCreateView вызван")
+        logEvent("onCreateView() вызван")
         return inflater.inflate(R.layout.activity_sign_in, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("SignInFragment", "onViewCreated вызван")
 
         dbHelper = DBHelper(requireContext())
 
@@ -45,32 +43,32 @@ class SignInFragment : Fragment() {
         logButton.setOnClickListener {
             val email = emailEdit.text.toString()
             val password = passEdit.text.toString()
-            Log.d("SignInFragment", "Попытка входа: email=$email")
+            Log.d(logTag, "Попытка входа: email=$email")
 
             if (dbHelper.checkUser(email, password)) {
-                Log.d("SignInFragment", "Вход успешен")
+                Log.d(logTag, "Вход успешен")
                 Toast.makeText(requireContext(), "Вход выполнен", Toast.LENGTH_SHORT).show()
                 (activity as? MainActivity)?.navigateToHome()
             } else {
-                Log.d("SignInFragment", "Вход неуспешен")
+                Log.d(logTag, "Вход неуспешен")
                 Toast.makeText(requireContext(), "Неверный email или пароль", Toast.LENGTH_SHORT).show()
             }
         }
 
         registerText.setOnClickListener {
-            Log.d("SignInFragment", "Переход на регистрацию")
+            Log.d(logTag, "Переход на регистрацию")
             (activity as? MainActivity)?.navigateToSignUp()
         }
 
         backButton.setOnClickListener {
-            Log.d("SignInFragment", "Возврат назад")
+            Log.d(logTag, "Возврат назад")
             parentFragmentManager.popBackStack()
         }
 
         arguments?.let {
             val userName = it.getString("user_name")
             val userEmail = it.getString("user_email")
-            Log.d("SignInFragment", "Получены данные: name=$userName, email=$userEmail")
+            Log.d(logTag, "Получены данные: name=$userName, email=$userEmail")
             if (userName != null && userEmail != null) {
                 userInfoText.text = "Пользователь: $userName\nEmail: $userEmail"
                 userInfoText.visibility = View.VISIBLE

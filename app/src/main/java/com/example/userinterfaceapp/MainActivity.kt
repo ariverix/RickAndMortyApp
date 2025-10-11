@@ -1,20 +1,52 @@
 package com.example.userinterfaceapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
+
 
 class MainActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_onboard)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        setContentView(R.layout.activity_main)
+
+        Log.d("MainActivity", "onCreate() вызван")
+
+        // Загружаем первый фрагмент при запуске
+        if (savedInstanceState == null) {
+            navigateToOnboard()
         }
+    }
+
+    fun navigateToOnboard() {
+        Log.d("MainActivity", "Навигация к OnboardFragment")
+        replaceFragment(OnboardFragment())
+    }
+
+    fun navigateToSignIn() {
+        Log.d("MainActivity", "Навигация к SignInFragment")
+        replaceFragment(SignInFragment())
+    }
+
+    fun navigateToSignUp() {
+        Log.d("MainActivity", "Навигация к SignUpFragment")
+        replaceFragment(SignUpFragment())
+    }
+
+    fun navigateToHome() {
+        Log.d("MainActivity", "Навигация к HomeFragment")
+        replaceFragment(HomeFragment())
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

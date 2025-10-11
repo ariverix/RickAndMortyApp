@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/space_dark">
+    android:background="@color/space_dark"
+    android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:layout_width="match_parent"
@@ -22,16 +23,11 @@
             android:paddingStart="16dp" />
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/characters_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/characters_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="8dp"/>
-    </ScrollView>
+        android:layout_height="match_parent"
+        android:contentDescription="Персонажи"
+        android:padding="8dp" />
 
 </LinearLayout>

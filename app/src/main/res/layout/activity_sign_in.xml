@@ -86,6 +86,25 @@
             android:text="Войти"
             android:textColor="@color/black"
             android:textStyle="bold" />
+        <TextView
+            android:id="@+id/user_info_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:textAlignment="center"
+            android:textSize="15sp"
+            android:textColor="@color/space_dark"
+            android:visibility="gone"
+            android:padding="16dp"
+            android:background="@drawable/user_info_bg"
+            android:textStyle="bold"
+            android:lineSpacingExtra="2dp"
+            android:elevation="4dp"
+            android:fontFamily="sans-serif-medium" />
 
         <LinearLayout
             android:id="@+id/dont_have_acc_text"

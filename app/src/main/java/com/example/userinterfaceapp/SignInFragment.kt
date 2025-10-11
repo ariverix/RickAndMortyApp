@@ -21,7 +21,7 @@ class SignInFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
@@ -67,8 +67,6 @@ class SignInFragment : BaseFragment() {
 
         val userName = args.userName
         val userEmail = args.userEmail
-        val userObject = args.userObject
-        Log.d(logTag, "Получены данные: name=$userName, email=$userEmail, user=$userObject")
 
         if (!userName.isNullOrEmpty() && !userEmail.isNullOrEmpty()) {
             userInfoText.text = "Пользователь: $userName\nEmail: $userEmail"

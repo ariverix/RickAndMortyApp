@@ -20,7 +20,7 @@ class SignUpFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
@@ -42,32 +42,27 @@ class SignUpFragment : BaseFragment() {
             val genderId = binding.rgGender.checkedRadioButtonId
             val gender = if (genderId != -1) {
                 view.findViewById<RadioButton>(genderId).text.toString()
-            } else {
-                ""
-            }
+            } else ""
 
             Log.d(logTag, "Попытка регистрации: name=$name, email=$email")
 
             if (name.isEmpty() || email.isEmpty() || password.isEmpty() || age.isEmpty() || gender.isEmpty()) {
-                Log.d(logTag, "Не все поля заполнены")
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             } else {
                 try {
                     dbHelper.addUser(email, password)
-                    Log.d(logTag, "Пользователь добавлен в БД")
                     Toast.makeText(requireContext(), "Аккаунт создан", Toast.LENGTH_SHORT).show()
 
                     val user = User(name, email, password, age, gender)
                     val direction = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment(
                         userName = name,
                         userEmail = email,
-                        userObject = user,
+                        userObject = user
                     )
 
-                    Log.d(logTag, "Передача данных в SignInFragment")
                     findNavController().navigate(direction)
+
                 } catch (e: Exception) {
-                    Log.e(logTag, "Ошибка регистрации: ${e.message}")
                     Toast.makeText(requireContext(), "Пользователь уже существует", Toast.LENGTH_SHORT).show()
                 }
             }

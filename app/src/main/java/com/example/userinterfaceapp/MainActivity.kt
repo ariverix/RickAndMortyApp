@@ -3,6 +3,7 @@ package com.example.userinterfaceapp
 import android.os.Bundle
 import android.util.Log
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 
 class MainActivity : BaseActivity() {
 
@@ -17,6 +18,9 @@ class MainActivity : BaseActivity() {
         setContentView(R.layout.activity_main)
 
         Log.d("MainActivity", "onCreate() вызван")
+
+        // Подключаем навигацию для кнопки "Назад"
+        NavigationUI.setupActionBarWithNavController(this, navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {

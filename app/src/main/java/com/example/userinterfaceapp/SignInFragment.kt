@@ -5,25 +5,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import com.google.android.material.textfield.TextInputEditText
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.example.userinterfaceapp.databinding.FragmentSignInBinding
 
 class SignInFragment : BaseFragment() {
 
+    private var _binding: FragmentSignInBinding? = null
+    private val binding get() = _binding!!
     private lateinit var dbHelper: DBHelper
-    private lateinit var userInfoText: TextView
+    private val args: SignInFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         logEvent("onCreateView() вызван")
-        return inflater.inflate(R.layout.activity_sign_in, container, false)
+        _binding = FragmentSignInBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -31,16 +33,12 @@ class SignInFragment : BaseFragment() {
 
         dbHelper = DBHelper(requireContext())
 
-        val emailEdit = view.findViewById<TextInputEditText>(R.id.editTextTextEmailAddress)
-        val passEdit = view.findViewById<TextInputEditText>(R.id.editTextTextPassword)
-        val logButton = view.findViewById<Button>(R.id.button_log)
-        val backButton = view.findViewById<ImageButton>(R.id.arrow_back_log)
-        userInfoText = view.findViewById(R.id.user_info_text)
+        val emailEdit = binding.editTextTextEmailAddress
+        val passEdit = binding.editTextTextPassword
+        val registerText = binding.dontHaveAccText.getChildAt(1) as TextView
+        val userInfoText = binding.userInfoText
 
-        val registerLayout = view.findViewById<LinearLayout>(R.id.dont_have_acc_text)
-        val registerText = registerLayout.getChildAt(1) as TextView
-
-        logButton.setOnClickListener {
+        binding.buttonLog.setOnClickListener {
             val email = emailEdit.text.toString()
             val password = passEdit.text.toString()
             Log.d(logTag, "Попытка входа: email=$email")
@@ -48,7 +46,8 @@ class SignInFragment : BaseFragment() {
             if (dbHelper.checkUser(email, password)) {
                 Log.d(logTag, "Вход успешен")
                 Toast.makeText(requireContext(), "Вход выполнен", Toast.LENGTH_SHORT).show()
-                (activity as? MainActivity)?.navigateToHome()
+                val direction = SignInFragmentDirections.actionSignInFragmentToHomeFragment()
+                findNavController().navigate(direction)
             } else {
                 Log.d(logTag, "Вход неуспешен")
                 Toast.makeText(requireContext(), "Неверный email или пароль", Toast.LENGTH_SHORT).show()
@@ -57,22 +56,26 @@ class SignInFragment : BaseFragment() {
 
         registerText.setOnClickListener {
             Log.d(logTag, "Переход на регистрацию")
-            (activity as? MainActivity)?.navigateToSignUp()
+            val direction = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
+            findNavController().navigate(direction)
         }
 
-        backButton.setOnClickListener {
+        binding.arrowBackLog.setOnClickListener {
             Log.d(logTag, "Возврат назад")
-            parentFragmentManager.popBackStack()
+            findNavController().navigateUp()
         }
 
-        arguments?.let {
-            val userName = it.getString("user_name")
-            val userEmail = it.getString("user_email")
-            Log.d(logTag, "Получены данные: name=$userName, email=$userEmail")
-            if (userName != null && userEmail != null) {
-                userInfoText.text = "Пользователь: $userName\nEmail: $userEmail"
-                userInfoText.visibility = View.VISIBLE
-            }
+        val userName = args.userName
+        val userEmail = args.userEmail
+
+        if (!userName.isNullOrEmpty() && !userEmail.isNullOrEmpty()) {
+            userInfoText.text = "Пользователь: $userName\nEmail: $userEmail"
+            userInfoText.visibility = View.VISIBLE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

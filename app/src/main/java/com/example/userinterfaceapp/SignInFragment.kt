@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -35,7 +34,7 @@ class SignInFragment : BaseFragment() {
 
         val emailEdit = binding.editTextTextEmailAddress
         val passEdit = binding.editTextTextPassword
-        val registerText = binding.dontHaveAccText.getChildAt(1) as TextView
+        val registerText = binding.registerLink
         val userInfoText = binding.userInfoText
 
         binding.buttonLog.setOnClickListener {
@@ -67,9 +66,14 @@ class SignInFragment : BaseFragment() {
 
         val userName = args.userName
         val userEmail = args.userEmail
+        val userObject = args.userObject
+        Log.d(logTag, "Получены данные: name=$userName, email=$userEmail, user=$userObject")
 
-        if (!userName.isNullOrEmpty() && !userEmail.isNullOrEmpty()) {
-            userInfoText.text = "Пользователь: $userName\nEmail: $userEmail"
+        val displayName = userName ?: userObject?.name
+        val displayEmail = userEmail ?: userObject?.email
+
+        if (!displayName.isNullOrEmpty() && !displayEmail.isNullOrEmpty()) {
+            userInfoText.text = "Пользователь: $displayName\nEmail: $displayEmail"
             userInfoText.visibility = View.VISIBLE
         }
     }

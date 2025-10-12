@@ -58,7 +58,6 @@ class HomeFragment : BaseFragment() {
                 }
 
                 binding.charactersRecyclerView.adapter = CharacterAdapter(characters)
-
             } catch (e: Exception) {
                 Log.e(logTag, "Ошибка: ${e.message}", e)
                 Toast.makeText(

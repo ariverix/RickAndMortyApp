@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/space_dark"
-    tools:context=".SignInActivity">
+    tools:context=".SignUpFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -169,6 +169,7 @@
                 android:textColor="@color/rick_blue" />
 
             <TextView
+                android:id="@+id/login_link"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"

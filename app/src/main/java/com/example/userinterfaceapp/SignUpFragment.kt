@@ -40,7 +40,7 @@ class SignUpFragment : BaseFragment() {
             val age = binding.etAge.text.toString()
             val genderId = binding.rgGender.checkedRadioButtonId
             val gender = if (genderId != -1) {
-                view.findViewById<RadioButton>(genderId).text.toString()
+                binding.rgGender.findViewById<RadioButton>(genderId).text.toString()
             } else {
                 ""
             }

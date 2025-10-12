@@ -3,6 +3,7 @@ package com.example.userinterfaceapp
 import android.os.Bundle
 import android.util.Log
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.example.userinterfaceapp.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity() {
@@ -20,6 +21,8 @@ class MainActivity : BaseActivity() {
         setContentView(binding.root)
 
         Log.d("MainActivity", "onCreate() вызван")
+
+        setupActionBarWithNavController(navController)
     }
 
     override fun onSupportNavigateUp(): Boolean {

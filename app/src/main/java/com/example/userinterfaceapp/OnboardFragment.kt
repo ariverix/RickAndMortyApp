@@ -16,7 +16,7 @@ class OnboardFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
         _binding = FragmentOnboardBinding.inflate(inflater, container, false)

@@ -19,7 +19,7 @@ class SignUpFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
         _binding = FragmentSignUpBinding.inflate(inflater, container, false)
@@ -60,7 +60,7 @@ class SignUpFragment : BaseFragment() {
                     val direction = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment(
                         userName = name,
                         userEmail = email,
-                        userObject = user,
+                        userObject = user
                     )
 
                     Log.d(logTag, "Передача данных в SignInFragment")

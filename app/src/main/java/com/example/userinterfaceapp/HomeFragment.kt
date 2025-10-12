@@ -23,7 +23,7 @@ class HomeFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -52,8 +52,8 @@ class HomeFragment : BaseFragment() {
                             name = char.getString("name"),
                             image = char.getString("image"),
                             status = char.getString("status"),
-                            species = char.getString("species"),
-                        ),
+                            species = char.getString("species")
+                        )
                     )
                 }
 
@@ -63,7 +63,7 @@ class HomeFragment : BaseFragment() {
                 Toast.makeText(
                     requireContext(),
                     "Ошибка загрузки персонажей: ${e.message}",
-                    Toast.LENGTH_LONG,
+                    Toast.LENGTH_LONG
                 ).show()
             }
         }

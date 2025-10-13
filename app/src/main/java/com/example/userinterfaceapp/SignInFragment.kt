@@ -19,7 +19,7 @@ class SignInFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
         _binding = FragmentSignInBinding.inflate(inflater, container, false)
@@ -32,9 +32,15 @@ class SignInFragment : BaseFragment() {
 
         dbHelper = DBHelper(requireContext())
 
+        val emailEdit = binding.editTextTextEmailAddress
+        val passEdit = binding.editTextTextPassword
+        val registerText = binding.registerLink
+        val userInfoText = binding.userInfoText
+        val backButton = binding.arrowBackLog   // ✅ исправлено здесь!
+
         binding.buttonLog.setOnClickListener {
-            val email = binding.editTextTextEmailAddress.text.toString()
-            val password = binding.editTextTextPassword.text.toString()
+            val email = emailEdit.text.toString()
+            val password = passEdit.text.toString()
             logEvent("Попытка входа: email=$email")
 
             if (dbHelper.checkUser(email, password)) {
@@ -48,36 +54,37 @@ class SignInFragment : BaseFragment() {
             }
         }
 
-        binding.registerLink.setOnClickListener {
+        registerText.setOnClickListener {
             logEvent("Переход на регистрацию")
             val direction = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
             findNavController().navigate(direction)
         }
 
-        binding.arrowBackLog.setOnClickListener {
+        backButton.setOnClickListener {
             logEvent("Возврат назад")
             findNavController().navigateUp()
         }
 
-        val userName = args.userName
-        val userEmail = args.userEmail
-        val userObject = args.userObject
+        arguments?.let {
+            val userName = it.getString("user_name")
+            val userEmail = it.getString("user_email")
+            val userObject = it.getSerializable("user_object") as? User
 
-        logEvent("Получены данные: name=$userName, email=$userEmail, user=$userObject")
+            logEvent("Получены данные: name=$userName, email=$userEmail, user=$userObject")
 
-        val displayName = userName ?: userObject?.name
-        val displayEmail = userEmail ?: userObject?.email
+            val displayName = userName ?: userObject?.name
+            val displayEmail = userEmail ?: userObject?.email
 
-        if (!displayName.isNullOrEmpty() && !displayEmail.isNullOrEmpty()) {
-            binding.userInfoText.text = "Пользователь: $displayName\nEmail: $displayEmail"
-            binding.userInfoText.visibility = View.VISIBLE
-        } else {
-            binding.userInfoText.visibility = View.GONE
+            if (!displayName.isNullOrEmpty() && !displayEmail.isNullOrEmpty()) {
+                userInfoText.text = "Пользователь: $displayName\nEmail: $displayEmail"
+                userInfoText.visibility = View.VISIBLE
+            }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        logEvent("onDestroyView() вызван")
         _binding = null
     }
 }

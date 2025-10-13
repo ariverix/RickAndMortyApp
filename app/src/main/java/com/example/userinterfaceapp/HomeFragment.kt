@@ -23,7 +23,7 @@ class HomeFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?,
+        savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
@@ -53,13 +53,14 @@ class HomeFragment : BaseFragment() {
                             name = char.getString("name"),
                             image = char.getString("image"),
                             status = char.getString("status"),
-                            species = char.getString("species"),
+                            species = char.getString("species")
                         )
                     )
                 }
 
                 binding.charactersRecyclerView.adapter = CharacterAdapter(characters)
                 logEvent("Отображено ${characters.size} персонажей")
+
             } catch (e: Exception) {
                 Log.e(logTag, "Ошибка загрузки персонажей", e)
                 Toast.makeText(
@@ -73,6 +74,7 @@ class HomeFragment : BaseFragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        logEvent("onDestroyView() вызван")
         _binding = null
     }
 }

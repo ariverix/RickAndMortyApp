@@ -1,17 +1,12 @@
 package com.example.userinterfaceapp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
-import com.example.userinterfaceapp.databinding.FragmentOnboardBinding
+import android.widget.Button
 
 class OnboardFragment : BaseFragment() {
-
-    private var _binding: FragmentOnboardBinding? = null
-    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -19,21 +14,17 @@ class OnboardFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
-        _binding = FragmentOnboardBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.activity_onboard, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        logEvent("onViewCreated() вызван")
 
-        binding.buttonReady.setOnClickListener {
-            Log.d(logTag, "Кнопка 'Готов' нажата")
-            findNavController().navigate(R.id.action_onboardFragment_to_signInFragment)
+        val buttonReady = view.findViewById<Button>(R.id.button_ready)
+        buttonReady.setOnClickListener {
+            logEvent("Кнопка 'Готов' нажата")
+            (activity as? MainActivity)?.navigateToSignIn()
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

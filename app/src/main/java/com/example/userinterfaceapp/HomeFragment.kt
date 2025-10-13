@@ -26,12 +26,12 @@ class HomeFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
-        _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.activity_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        logEvent("onViewCreated() вызван")
 
         binding.charactersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
@@ -57,9 +57,10 @@ class HomeFragment : BaseFragment() {
                     )
                 }
 
-                binding.charactersRecyclerView.adapter = CharacterAdapter(characters)
+                recyclerView.adapter = CharacterAdapter(characters)
+                logEvent("Отображено ${characters.size} персонажей")
             } catch (e: Exception) {
-                Log.e(logTag, "Ошибка: ${e.message}", e)
+                Log.e(logTag, "Ошибка загрузки персонажей", e)
                 Toast.makeText(
                     requireContext(),
                     "Ошибка загрузки персонажей: ${e.message}",
@@ -67,10 +68,5 @@ class HomeFragment : BaseFragment() {
                 ).show()
             }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

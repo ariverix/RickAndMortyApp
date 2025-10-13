@@ -1,14 +1,11 @@
 package com.example.userinterfaceapp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
-import com.example.userinterfaceapp.databinding.FragmentSignInBinding
+import com.google.android.material.textfield.TextInputEditText
 
 class SignInFragment : BaseFragment() {
 
@@ -23,12 +20,12 @@ class SignInFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
-        _binding = FragmentSignInBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.activity_sign_in, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        logEvent("onViewCreated() вызван")
 
         dbHelper = DBHelper(requireContext())
 
@@ -40,46 +37,43 @@ class SignInFragment : BaseFragment() {
         binding.buttonLog.setOnClickListener {
             val email = emailEdit.text.toString()
             val password = passEdit.text.toString()
-            Log.d(logTag, "Попытка входа: email=$email")
+            logEvent("Попытка входа: email=$email")
 
             if (dbHelper.checkUser(email, password)) {
-                Log.d(logTag, "Вход успешен")
+                logEvent("Вход успешен")
                 Toast.makeText(requireContext(), "Вход выполнен", Toast.LENGTH_SHORT).show()
                 val direction = SignInFragmentDirections.actionSignInFragmentToHomeFragment()
                 findNavController().navigate(direction)
             } else {
-                Log.d(logTag, "Вход неуспешен")
+                logEvent("Вход неуспешен")
                 Toast.makeText(requireContext(), "Неверный email или пароль", Toast.LENGTH_SHORT).show()
             }
         }
 
         registerText.setOnClickListener {
-            Log.d(logTag, "Переход на регистрацию")
-            val direction = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
-            findNavController().navigate(direction)
+            logEvent("Переход на регистрацию")
+            (activity as? MainActivity)?.navigateToSignUp()
         }
 
-        binding.arrowBackLog.setOnClickListener {
-            Log.d(logTag, "Возврат назад")
-            findNavController().navigateUp()
+        backButton.setOnClickListener {
+            logEvent("Возврат назад")
+            parentFragmentManager.popBackStack()
         }
 
-        val userName = args.userName
-        val userEmail = args.userEmail
-        val userObject = args.userObject
-        Log.d(logTag, "Получены данные: name=$userName, email=$userEmail, user=$userObject")
+        arguments?.let {
+            val userName = it.getString("user_name")
+            val userEmail = it.getString("user_email")
+            val userObject = it.getSerializable("user_object") as? User
 
-        val displayName = userName ?: userObject?.name
-        val displayEmail = userEmail ?: userObject?.email
+            logEvent("Получены данные: name=$userName, email=$userEmail, user=$userObject")
 
-        if (!displayName.isNullOrEmpty() && !displayEmail.isNullOrEmpty()) {
-            userInfoText.text = "Пользователь: $displayName\nEmail: $displayEmail"
-            userInfoText.visibility = View.VISIBLE
+            val displayName = userName ?: userObject?.name
+            val displayEmail = userEmail ?: userObject?.email
+
+            if (!displayName.isNullOrEmpty() && !displayEmail.isNullOrEmpty()) {
+                userInfoText.text = "Пользователь: $displayName\nEmail: $displayEmail"
+                userInfoText.visibility = View.VISIBLE
+            }
         }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }

@@ -2,30 +2,51 @@ package com.example.userinterfaceapp
 
 import android.os.Bundle
 import android.util.Log
-import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupActionBarWithNavController
-import com.example.userinterfaceapp.databinding.ActivityMainBinding
+import androidx.fragment.app.Fragment
 
 class MainActivity : BaseActivity() {
 
-    private lateinit var binding: ActivityMainBinding
-    private val navController by lazy {
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(binding.navHostFragment.id) as NavHostFragment
-        navHostFragment.navController
-    }
+    private val logTag = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.d("MainActivity", "onCreate() вызван")
+        Log.d(logTag, "onCreate() завершён")
 
-        setupActionBarWithNavController(navController)
+        if (savedInstanceState == null) {
+            navigateToOnboard(addToBackStack = false)
+        }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        return navController.navigateUp() || super.onSupportNavigateUp()
+    fun navigateToOnboard(addToBackStack: Boolean = true) {
+        Log.d(logTag, "Навигация к OnboardFragment")
+        replaceFragment(OnboardFragment(), addToBackStack)
+    }
+
+    fun navigateToSignIn(args: Bundle? = null, addToBackStack: Boolean = true) {
+        Log.d(logTag, "Навигация к SignInFragment")
+        val fragment = SignInFragment().apply { arguments = args }
+        replaceFragment(fragment, addToBackStack)
+    }
+
+    fun navigateToSignUp(addToBackStack: Boolean = true) {
+        Log.d(logTag, "Навигация к SignUpFragment")
+        replaceFragment(SignUpFragment(), addToBackStack)
+    }
+
+    fun navigateToHome(addToBackStack: Boolean = true) {
+        Log.d(logTag, "Навигация к HomeFragment")
+        replaceFragment(HomeFragment(), addToBackStack)
+    }
+
+    private fun replaceFragment(fragment: Fragment, addToBackStack: Boolean) {
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_container, fragment)
+            if (addToBackStack) {
+                addToBackStack(null)
+            }
+        }.commit()
     }
 }

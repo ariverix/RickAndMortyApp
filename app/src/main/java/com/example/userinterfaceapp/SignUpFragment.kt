@@ -1,14 +1,13 @@
 package com.example.userinterfaceapp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
-import com.example.userinterfaceapp.databinding.FragmentSignUpBinding
+import androidx.core.os.bundleOf
+import com.google.android.material.textfield.TextInputEditText
 
 class SignUpFragment : BaseFragment() {
 
@@ -22,12 +21,12 @@ class SignUpFragment : BaseFragment() {
         savedInstanceState: Bundle?
     ): View {
         logEvent("onCreateView() вызван")
-        _binding = FragmentSignUpBinding.inflate(inflater, container, false)
-        return binding.root
+        return inflater.inflate(R.layout.activity_sign_up, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        logEvent("onViewCreated() вызван")
 
         dbHelper = DBHelper(requireContext())
 
@@ -45,15 +44,15 @@ class SignUpFragment : BaseFragment() {
                 ""
             }
 
-            Log.d(logTag, "Попытка регистрации: name=$name, email=$email")
+            logEvent("Попытка регистрации: name=$name, email=$email")
 
             if (name.isEmpty() || email.isEmpty() || password.isEmpty() || age.isEmpty() || gender.isEmpty()) {
-                Log.d(logTag, "Не все поля заполнены")
+                logEvent("Не все поля заполнены")
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             } else {
                 try {
                     dbHelper.addUser(email, password)
-                    Log.d(logTag, "Пользователь добавлен в БД")
+                    logEvent("Пользователь добавлен в БД")
                     Toast.makeText(requireContext(), "Аккаунт создан", Toast.LENGTH_SHORT).show()
 
                     val user = User(name, email, password, age, gender)
@@ -63,18 +62,18 @@ class SignUpFragment : BaseFragment() {
                         userObject = user
                     )
 
-                    Log.d(logTag, "Передача данных в SignInFragment")
-                    findNavController().navigate(direction)
+                    logEvent("Передача данных в SignInFragment")
+                    (activity as? MainActivity)?.navigateToSignIn(bundle, addToBackStack = false)
                 } catch (e: Exception) {
-                    Log.e(logTag, "Ошибка регистрации: ${e.message}")
+                    logEvent("Ошибка регистрации: ${e.message}")
                     Toast.makeText(requireContext(), "Пользователь уже существует", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        loginLink.setOnClickListener {
-            Log.d(logTag, "Возврат к входу")
-            findNavController().navigateUp()
+        loginText.setOnClickListener {
+            logEvent("Возврат к входу")
+            parentFragmentManager.popBackStack()
         }
 
         binding.arrowBack.setOnClickListener {

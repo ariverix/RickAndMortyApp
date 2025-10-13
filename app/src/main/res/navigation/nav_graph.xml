@@ -29,7 +29,8 @@
             android:defaultValue="@null" />
         <argument
             android:name="userObject"
-            app:argType="com.example.userinterfaceapp.User?"
+            app:argType="com.example.userinterfaceapp.User"
+            app:nullable="true"
             android:defaultValue="@null" />
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"

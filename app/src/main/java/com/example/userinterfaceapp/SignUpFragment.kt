@@ -79,16 +79,6 @@ class SignUpFragment : BaseFragment() {
             logEvent("Возврат назад")
             findNavController().navigateUp()
         }
-
-        binding.arrowBack.setOnClickListener {
-            Log.d(logTag, "Возврат назад")
-            findNavController().navigateUp()
-        }
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     override fun onDestroyView() {

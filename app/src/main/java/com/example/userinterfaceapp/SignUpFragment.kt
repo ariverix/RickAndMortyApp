@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import com.example.userinterfaceapp.databinding.FragmentSignUpBinding
 
 class SignUpFragment : BaseFragment() {
@@ -29,6 +30,7 @@ class SignUpFragment : BaseFragment() {
         logEvent("onViewCreated() вызван")
 
         dbHelper = DBHelper(requireContext())
+        val navController = findNavController()
 
         binding.buttonInput.setOnClickListener {
             val name = binding.etName.text.toString()
@@ -54,18 +56,13 @@ class SignUpFragment : BaseFragment() {
                     Toast.makeText(requireContext(), "Аккаунт создан", Toast.LENGTH_SHORT).show()
 
                     val user = User(name, email, password, age, gender)
-                    val resultBundle = Bundle().apply {
-                        putString(SignInFragment.ARG_USER_NAME, name)
-                        putString(SignInFragment.ARG_USER_EMAIL, email)
-                        putSerializable(SignInFragment.ARG_USER_OBJECT, user)
-                    }
-
-                    logEvent("Передача данных в SignInFragment")
-                    parentFragmentManager.setFragmentResult(
-                        SignInFragment.REQUEST_USER_DATA,
-                        resultBundle,
+                    // A: Передаём данные на экран входа с помощью Safe Args
+                    val action = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment(
+                        userName = name,
+                        userEmail = email,
+                        userObject = user,
                     )
-                    activity?.onBackPressedDispatcher?.onBackPressed()
+                    navController.navigate(action)
                 } catch (e: Exception) {
                     logEvent("Ошибка регистрации: ${e.message}")
                     Toast.makeText(requireContext(), "Пользователь уже существует", Toast.LENGTH_SHORT).show()
@@ -75,12 +72,13 @@ class SignUpFragment : BaseFragment() {
 
         binding.loginLink.setOnClickListener {
             logEvent("Возврат к входу")
-            activity?.onBackPressedDispatcher?.onBackPressed()
+            // A: Возврат на экран входа через стек навигации
+            navController.popBackStack()
         }
 
         binding.arrowBack.setOnClickListener {
             logEvent("Возврат назад")
-            activity?.onBackPressedDispatcher?.onBackPressed()
+            navController.popBackStack()
         }
     }
 

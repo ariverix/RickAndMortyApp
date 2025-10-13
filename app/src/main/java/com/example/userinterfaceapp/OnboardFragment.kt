@@ -28,10 +28,17 @@ class OnboardFragment : BaseFragment() {
 
         binding.buttonReady.setOnClickListener {
             Log.d(logTag, "Кнопка 'Готов' нажата")
-            val direction = OnboardFragmentDirections.actionOnboardFragmentToSignInFragment()
+
+            // Create the user object you need to pass
+            val userToPass = User("exampleId", "exampleName") // Replace with your actual object and data
+
+            // Pass the object as an argument
+            val direction = OnboardFragmentDirections.actionOnboardFragmentToSignInFragment(userToPass)
+
             findNavController().navigate(direction)
         }
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

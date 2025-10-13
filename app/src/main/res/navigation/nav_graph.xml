@@ -20,11 +20,13 @@
         <argument
             android:name="userName"
             app:argType="string"
-            android:defaultValue="@null" />
+            android:defaultValue="@null"
+            app:nullable="true" />
         <argument
             android:name="userEmail"
             app:argType="string"
-            android:defaultValue="@null" />
+            android:defaultValue="@null"
+            app:nullable="true"/>
         <argument
             android:name="userObject"
             app:argType="com.example.userinterfaceapp.User"
@@ -43,9 +45,7 @@
         android:label="SignUpFragment">
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
-            app:destination="@id/signInFragment"
-            app:popUpTo="@id/signInFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/signInFragment" />
     </fragment>
 
     <fragment

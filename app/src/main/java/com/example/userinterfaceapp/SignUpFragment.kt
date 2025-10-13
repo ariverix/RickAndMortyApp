@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.RadioButton
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
 import com.example.userinterfaceapp.databinding.FragmentSignUpBinding
 
 class SignUpFragment : BaseFragment() {
@@ -55,14 +54,18 @@ class SignUpFragment : BaseFragment() {
                     Toast.makeText(requireContext(), "Аккаунт создан", Toast.LENGTH_SHORT).show()
 
                     val user = User(name, email, password, age, gender)
-                    val direction = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment(
-                        userName = name,
-                        userEmail = email,
-                        userObject = user,
-                    )
+                    val resultBundle = Bundle().apply {
+                        putString(SignInFragment.ARG_USER_NAME, name)
+                        putString(SignInFragment.ARG_USER_EMAIL, email)
+                        putSerializable(SignInFragment.ARG_USER_OBJECT, user)
+                    }
 
                     logEvent("Передача данных в SignInFragment")
-                    findNavController().navigate(direction)
+                    parentFragmentManager.setFragmentResult(
+                        SignInFragment.REQUEST_USER_DATA,
+                        resultBundle,
+                    )
+                    activity?.onBackPressedDispatcher?.onBackPressed()
                 } catch (e: Exception) {
                     logEvent("Ошибка регистрации: ${e.message}")
                     Toast.makeText(requireContext(), "Пользователь уже существует", Toast.LENGTH_SHORT).show()
@@ -72,12 +75,12 @@ class SignUpFragment : BaseFragment() {
 
         binding.loginLink.setOnClickListener {
             logEvent("Возврат к входу")
-            findNavController().navigateUp()
+            activity?.onBackPressedDispatcher?.onBackPressed()
         }
 
         binding.arrowBack.setOnClickListener {
             logEvent("Возврат назад")
-            findNavController().navigateUp()
+            activity?.onBackPressedDispatcher?.onBackPressed()
         }
     }
 

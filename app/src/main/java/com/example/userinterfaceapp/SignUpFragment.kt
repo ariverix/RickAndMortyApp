@@ -1,7 +1,6 @@
 package com.example.userinterfaceapp
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +11,9 @@ import android.widget.RadioGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputEditText
 
-class SignUpFragment : Fragment() {
+class SignUpFragment : BaseFragment() {
 
     private lateinit var dbHelper: DBHelper
 
@@ -23,14 +21,14 @@ class SignUpFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        Log.d("SignUpFragment", "onCreateView вызван")
+    ): View {
+        logEvent("onCreateView() вызван")
         return inflater.inflate(R.layout.activity_sign_up, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("SignUpFragment", "onViewCreated вызван")
+        logEvent("onViewCreated() вызван")
 
         dbHelper = DBHelper(requireContext())
 
@@ -51,15 +49,15 @@ class SignUpFragment : Fragment() {
             val genderId = genderGroup.checkedRadioButtonId
             val gender = if (genderId != -1) view.findViewById<RadioButton>(genderId).text.toString() else ""
 
-            Log.d("SignUpFragment", "Попытка регистрации: name=$name, email=$email")
+            logEvent("Попытка регистрации: name=$name, email=$email")
 
             if (name.isEmpty() || email.isEmpty() || password.isEmpty() || age.isEmpty() || gender.isEmpty()) {
-                Log.d("SignUpFragment", "Не все поля заполнены")
+                logEvent("Не все поля заполнены")
                 Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show()
             } else {
                 try {
                     dbHelper.addUser(email, password)
-                    Log.d("SignUpFragment", "Пользователь добавлен в БД")
+                    logEvent("Пользователь добавлен в БД")
                     Toast.makeText(requireContext(), "Аккаунт создан", Toast.LENGTH_SHORT).show()
 
                     val user = User(name, email, password, age, gender)
@@ -69,26 +67,17 @@ class SignUpFragment : Fragment() {
                         "user_object" to user
                     )
 
-                    Log.d("SignUpFragment", "Передача данных в SignInFragment")
-
-                    val signInFragment = SignInFragment()
-                    signInFragment.arguments = bundle
-
-                    parentFragmentManager.popBackStack()
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, signInFragment)
-                        .addToBackStack(null)
-                        .commit()
-
+                    logEvent("Передача данных в SignInFragment")
+                    (activity as? MainActivity)?.navigateToSignIn(bundle, addToBackStack = false)
                 } catch (e: Exception) {
-                    Log.e("SignUpFragment", "Ошибка регистрации: ${e.message}")
+                    logEvent("Ошибка регистрации: ${e.message}")
                     Toast.makeText(requireContext(), "Пользователь уже существует", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
         loginText.setOnClickListener {
-            Log.d("SignUpFragment", "Возврат к входу")
+            logEvent("Возврат к входу")
             parentFragmentManager.popBackStack()
         }
     }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,7 +15,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment() {
 
     private lateinit var recyclerView: RecyclerView
 
@@ -24,12 +23,14 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
+        logEvent("onCreateView() вызван")
         return inflater.inflate(R.layout.activity_home, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        logEvent("onViewCreated() вызван")
 
         recyclerView = view.findViewById(R.id.characters_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -46,19 +47,25 @@ class HomeFragment : Fragment() {
 
                 for (i in 0 until results.length()) {
                     val char = results.getJSONObject(i)
-                    characters.add(Character(
-                        name = char.getString("name"),
-                        image = char.getString("image"),
-                        status = char.getString("status"),
-                        species = char.getString("species")
-                    ))
+                    characters.add(
+                        Character(
+                            name = char.getString("name"),
+                            image = char.getString("image"),
+                            status = char.getString("status"),
+                            species = char.getString("species")
+                        )
+                    )
                 }
 
                 recyclerView.adapter = CharacterAdapter(characters)
-
+                logEvent("Отображено ${characters.size} персонажей")
             } catch (e: Exception) {
-                Log.e("HomeFragment", "Ошибка: ${e.message}", e)
-                Toast.makeText(requireContext(), "Ошибка загрузки персонажей: ${e.message}", Toast.LENGTH_LONG).show()
+                Log.e(logTag, "Ошибка загрузки персонажей", e)
+                Toast.makeText(
+                    requireContext(),
+                    "Ошибка загрузки персонажей: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }

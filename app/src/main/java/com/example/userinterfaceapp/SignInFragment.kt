@@ -4,17 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import com.google.android.material.textfield.TextInputEditText
 
 class SignInFragment : BaseFragment() {
 
+    private var _binding: FragmentSignInBinding? = null
+    private val binding get() = _binding!!
     private lateinit var dbHelper: DBHelper
-    private lateinit var userInfoText: TextView
+    private val args: SignInFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,16 +29,12 @@ class SignInFragment : BaseFragment() {
 
         dbHelper = DBHelper(requireContext())
 
-        val emailEdit = view.findViewById<TextInputEditText>(R.id.editTextTextEmailAddress)
-        val passEdit = view.findViewById<TextInputEditText>(R.id.editTextTextPassword)
-        val logButton = view.findViewById<Button>(R.id.button_log)
-        val backButton = view.findViewById<ImageButton>(R.id.arrow_back_log)
-        userInfoText = view.findViewById(R.id.user_info_text)
+        val emailEdit = binding.editTextTextEmailAddress
+        val passEdit = binding.editTextTextPassword
+        val registerText = binding.registerLink
+        val userInfoText = binding.userInfoText
 
-        val registerLayout = view.findViewById<LinearLayout>(R.id.dont_have_acc_text)
-        val registerText = registerLayout.getChildAt(1) as TextView
-
-        logButton.setOnClickListener {
+        binding.buttonLog.setOnClickListener {
             val email = emailEdit.text.toString()
             val password = passEdit.text.toString()
             logEvent("Попытка входа: email=$email")
@@ -48,7 +42,8 @@ class SignInFragment : BaseFragment() {
             if (dbHelper.checkUser(email, password)) {
                 logEvent("Вход успешен")
                 Toast.makeText(requireContext(), "Вход выполнен", Toast.LENGTH_SHORT).show()
-                (activity as? MainActivity)?.navigateToHome()
+                val direction = SignInFragmentDirections.actionSignInFragmentToHomeFragment()
+                findNavController().navigate(direction)
             } else {
                 logEvent("Вход неуспешен")
                 Toast.makeText(requireContext(), "Неверный email или пароль", Toast.LENGTH_SHORT).show()

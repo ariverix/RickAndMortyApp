@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.userinterfaceapp.databinding.FragmentHomeBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -17,7 +17,8 @@ import java.net.URL
 
 class HomeFragment : BaseFragment() {
 
-    private lateinit var recyclerView: RecyclerView
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,8 +33,7 @@ class HomeFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
         logEvent("onViewCreated() вызван")
 
-        recyclerView = view.findViewById(R.id.characters_recycler_view)
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.charactersRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         lifecycleScope.launch {
             try {

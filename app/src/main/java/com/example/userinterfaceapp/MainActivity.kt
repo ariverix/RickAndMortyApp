@@ -2,51 +2,34 @@ package com.example.userinterfaceapp
 
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupActionBarWithNavController
+import com.example.userinterfaceapp.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity() {
 
-    private val logTag = "MainActivity"
+    private lateinit var binding: ActivityMainBinding
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
+    private val navController by lazy {
+        val navHostFragment = supportFragmentManager
+            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navHostFragment.navController
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        Log.d(logTag, "onCreate() завершён")
+        Log.d("MainActivity", "onCreate() завершён")
 
-        if (savedInstanceState == null) {
-            navigateToOnboard(addToBackStack = false)
-        }
+        appBarConfiguration = AppBarConfiguration(navController.graph)
+        setupActionBarWithNavController(navController, appBarConfiguration)
     }
 
-    fun navigateToOnboard(addToBackStack: Boolean = true) {
-        Log.d(logTag, "Навигация к OnboardFragment")
-        replaceFragment(OnboardFragment(), addToBackStack)
-    }
-
-    fun navigateToSignIn(args: Bundle? = null, addToBackStack: Boolean = true) {
-        Log.d(logTag, "Навигация к SignInFragment")
-        val fragment = SignInFragment().apply { arguments = args }
-        replaceFragment(fragment, addToBackStack)
-    }
-
-    fun navigateToSignUp(addToBackStack: Boolean = true) {
-        Log.d(logTag, "Навигация к SignUpFragment")
-        replaceFragment(SignUpFragment(), addToBackStack)
-    }
-
-    fun navigateToHome(addToBackStack: Boolean = true) {
-        Log.d(logTag, "Навигация к HomeFragment")
-        replaceFragment(HomeFragment(), addToBackStack)
-    }
-
-    private fun replaceFragment(fragment: Fragment, addToBackStack: Boolean) {
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragment_container, fragment)
-            if (addToBackStack) {
-                addToBackStack(null)
-            }
-        }.commit()
+    override fun onSupportNavigateUp(): Boolean {
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 }

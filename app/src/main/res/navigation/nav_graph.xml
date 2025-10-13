@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/onboardFragment"
         android:name="com.example.userinterfaceapp.OnboardFragment"
-        android:label="OnboardFragment">
+        android:label="Onboarding">
         <action
             android:id="@+id/action_onboardFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
@@ -16,21 +16,21 @@
     <fragment
         android:id="@+id/signInFragment"
         android:name="com.example.userinterfaceapp.SignInFragment"
-        android:label="SignInFragment">
+        android:label="Sign In">
         <argument
             android:name="userName"
             app:argType="string"
-            android:defaultValue="@null"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="userEmail"
             app:argType="string"
-            android:defaultValue="@null"
-            app:nullable="true" />
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="userObject"
-            app:argType="com.example.userinterfaceapp.User"
-            app:nullable="true" />
+            app:argType="com.example.userinterfaceapp.User?"
+            android:defaultValue="@null" />
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
@@ -42,17 +42,14 @@
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.example.userinterfaceapp.SignUpFragment"
-        android:label="SignUpFragment">
+        android:label="Sign Up">
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
-            app:destination="@id/signInFragment"
-            app:popUpTo="@id/signInFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/signInFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.userinterfaceapp.HomeFragment"
-        android:label="HomeFragment" />
-
+        android:label="Home" />
 </navigation>

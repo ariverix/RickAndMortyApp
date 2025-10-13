@@ -23,10 +23,11 @@ class HomeFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         logEvent("onCreateView() вызван")
-        return inflater.inflate(R.layout.activity_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,12 +53,12 @@ class HomeFragment : BaseFragment() {
                             name = char.getString("name"),
                             image = char.getString("image"),
                             status = char.getString("status"),
-                            species = char.getString("species")
+                            species = char.getString("species"),
                         )
                     )
                 }
 
-                recyclerView.adapter = CharacterAdapter(characters)
+                binding.charactersRecyclerView.adapter = CharacterAdapter(characters)
                 logEvent("Отображено ${characters.size} персонажей")
             } catch (e: Exception) {
                 Log.e(logTag, "Ошибка загрузки персонажей", e)
@@ -68,5 +69,10 @@ class HomeFragment : BaseFragment() {
                 ).show()
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

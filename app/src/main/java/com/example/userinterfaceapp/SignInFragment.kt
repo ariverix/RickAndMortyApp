@@ -5,7 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import com.google.android.material.textfield.TextInputEditText
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
+import com.example.userinterfaceapp.databinding.FragmentSignInBinding
 
 class SignInFragment : BaseFragment() {
 
@@ -17,10 +19,11 @@ class SignInFragment : BaseFragment() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View {
         logEvent("onCreateView() вызван")
-        return inflater.inflate(R.layout.activity_sign_in, container, false)
+        _binding = FragmentSignInBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -29,14 +32,9 @@ class SignInFragment : BaseFragment() {
 
         dbHelper = DBHelper(requireContext())
 
-        val emailEdit = binding.editTextTextEmailAddress
-        val passEdit = binding.editTextTextPassword
-        val registerText = binding.registerLink
-        val userInfoText = binding.userInfoText
-
         binding.buttonLog.setOnClickListener {
-            val email = emailEdit.text.toString()
-            val password = passEdit.text.toString()
+            val email = binding.editTextTextEmailAddress.text.toString()
+            val password = binding.editTextTextPassword.text.toString()
             logEvent("Попытка входа: email=$email")
 
             if (dbHelper.checkUser(email, password)) {
@@ -50,30 +48,36 @@ class SignInFragment : BaseFragment() {
             }
         }
 
-        registerText.setOnClickListener {
+        binding.registerLink.setOnClickListener {
             logEvent("Переход на регистрацию")
-            (activity as? MainActivity)?.navigateToSignUp()
+            val direction = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
+            findNavController().navigate(direction)
         }
 
-        backButton.setOnClickListener {
+        binding.arrowBackLog.setOnClickListener {
             logEvent("Возврат назад")
-            parentFragmentManager.popBackStack()
+            findNavController().navigateUp()
         }
 
-        arguments?.let {
-            val userName = it.getString("user_name")
-            val userEmail = it.getString("user_email")
-            val userObject = it.getSerializable("user_object") as? User
+        val userName = args.userName
+        val userEmail = args.userEmail
+        val userObject = args.userObject
 
-            logEvent("Получены данные: name=$userName, email=$userEmail, user=$userObject")
+        logEvent("Получены данные: name=$userName, email=$userEmail, user=$userObject")
 
-            val displayName = userName ?: userObject?.name
-            val displayEmail = userEmail ?: userObject?.email
+        val displayName = userName ?: userObject?.name
+        val displayEmail = userEmail ?: userObject?.email
 
-            if (!displayName.isNullOrEmpty() && !displayEmail.isNullOrEmpty()) {
-                userInfoText.text = "Пользователь: $displayName\nEmail: $displayEmail"
-                userInfoText.visibility = View.VISIBLE
-            }
+        if (!displayName.isNullOrEmpty() && !displayEmail.isNullOrEmpty()) {
+            binding.userInfoText.text = "Пользователь: $displayName\nEmail: $displayEmail"
+            binding.userInfoText.visibility = View.VISIBLE
+        } else {
+            binding.userInfoText.visibility = View.GONE
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

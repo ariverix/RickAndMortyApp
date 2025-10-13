@@ -11,7 +11,7 @@ class MainActivity : BaseActivity() {
     private lateinit var binding: ActivityMainBinding
     private val navController by lazy {
         val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            .findFragmentById(binding.navHostFragment.id) as NavHostFragment
         navHostFragment.navController
     }
 

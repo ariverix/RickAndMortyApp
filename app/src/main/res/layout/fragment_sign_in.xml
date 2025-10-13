@@ -97,7 +97,7 @@
             android:layout_marginEnd="8dp"
             android:textAlignment="center"
             android:textSize="15sp"
-            android:textColor="@color/morty_white"
+            android:textColor="@color/space_dark"
             android:visibility="gone"
             android:padding="16dp"
             android:background="@drawable/user_info_bg"

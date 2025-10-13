@@ -4,9 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.example.userinterfaceapp.databinding.FragmentSignInBinding
 
 class SignInFragment : BaseFragment() {
@@ -14,7 +13,7 @@ class SignInFragment : BaseFragment() {
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
     private lateinit var dbHelper: DBHelper
-    private val args: SignInFragmentArgs by navArgs()
+    private var pendingUserBundle: Bundle? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -32,11 +31,11 @@ class SignInFragment : BaseFragment() {
 
         dbHelper = DBHelper(requireContext())
 
+        val mainActivity = activity as? MainActivity
+
         val emailEdit = binding.editTextTextEmailAddress
         val passEdit = binding.editTextTextPassword
-        val registerText = binding.registerLink
         val userInfoText = binding.userInfoText
-        val backButton = binding.arrowBackLog   // ✅ исправлено здесь!
 
         binding.buttonLog.setOnClickListener {
             val email = emailEdit.text.toString()
@@ -46,39 +45,55 @@ class SignInFragment : BaseFragment() {
             if (dbHelper.checkUser(email, password)) {
                 logEvent("Вход успешен")
                 Toast.makeText(requireContext(), "Вход выполнен", Toast.LENGTH_SHORT).show()
-                val direction = SignInFragmentDirections.actionSignInFragmentToHomeFragment()
-                findNavController().navigate(direction)
+                mainActivity?.navigateToHome(addToBackStack = false)
             } else {
                 logEvent("Вход неуспешен")
                 Toast.makeText(requireContext(), "Неверный email или пароль", Toast.LENGTH_SHORT).show()
             }
         }
 
-        registerText.setOnClickListener {
+        binding.registerLink.setOnClickListener {
             logEvent("Переход на регистрацию")
-            val direction = SignInFragmentDirections.actionSignInFragmentToSignUpFragment()
-            findNavController().navigate(direction)
+            mainActivity?.navigateToSignUp()
         }
 
-        backButton.setOnClickListener {
+        binding.arrowBackLog.setOnClickListener {
             logEvent("Возврат назад")
-            findNavController().navigateUp()
+            activity?.onBackPressedDispatcher?.onBackPressed()
         }
 
-        arguments?.let {
-            val userName = it.getString("user_name")
-            val userEmail = it.getString("user_email")
-            val userObject = it.getSerializable("user_object") as? User
+        parentFragmentManager.setFragmentResultListener(
+            REQUEST_USER_DATA,
+            viewLifecycleOwner,
+        ) { _, bundle ->
+            logEvent("Получен результат регистрации")
+            pendingUserBundle = bundle
+            displayUserInfo(userInfoText, bundle)
+            parentFragmentManager.clearFragmentResult(REQUEST_USER_DATA)
+        }
 
-            logEvent("Получены данные: name=$userName, email=$userEmail, user=$userObject")
+        val argumentsBundle = savedInstanceState?.getBundle(STATE_USER_INFO)
+            ?: arguments
+            ?: pendingUserBundle
+        argumentsBundle?.let {
+            pendingUserBundle = it
+            displayUserInfo(userInfoText, it)
+        }
+    }
 
-            val displayName = userName ?: userObject?.name
-            val displayEmail = userEmail ?: userObject?.email
+    private fun displayUserInfo(targetView: TextView, bundle: Bundle) {
+        val userName = bundle.getString(ARG_USER_NAME)
+        val userEmail = bundle.getString(ARG_USER_EMAIL)
+        val userObject = bundle.getSerializable(ARG_USER_OBJECT) as? User
 
-            if (!displayName.isNullOrEmpty() && !displayEmail.isNullOrEmpty()) {
-                userInfoText.text = "Пользователь: $displayName\nEmail: $displayEmail"
-                userInfoText.visibility = View.VISIBLE
-            }
+        logEvent("Получены данные: name=$userName, email=$userEmail, user=$userObject")
+
+        val displayName = userName ?: userObject?.name
+        val displayEmail = userEmail ?: userObject?.email
+
+        if (!displayName.isNullOrEmpty() && !displayEmail.isNullOrEmpty()) {
+            targetView.text = "Пользователь: $displayName\nEmail: $displayEmail"
+            targetView.visibility = View.VISIBLE
         }
     }
 
@@ -86,5 +101,24 @@ class SignInFragment : BaseFragment() {
         super.onDestroyView()
         logEvent("onDestroyView() вызван")
         _binding = null
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        pendingUserBundle?.let { outState.putBundle(STATE_USER_INFO, it) }
+    }
+
+    companion object {
+        const val ARG_USER_NAME = "user_name"
+        const val ARG_USER_EMAIL = "user_email"
+        const val ARG_USER_OBJECT = "user_object"
+        const val REQUEST_USER_DATA = "request_user_data"
+        private const val STATE_USER_INFO = "state_user_info"
+
+        fun newInstance(bundle: Bundle? = null): SignInFragment {
+            return SignInFragment().apply {
+                arguments = bundle
+            }
+        }
     }
 }

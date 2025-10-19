@@ -14,7 +14,7 @@ class SignUpFragment : BaseFragment() {
     private var _binding: FragmentSignUpBinding? = null
     private val binding get() = _binding!!
     private lateinit var dbHelper: DBHelper
-
+// hello
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

@@ -1,8 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.androidx.navigation.safe.args)
+    alias(libs.plugins.androidx.navigation.safeargs.kotlin)
 }
+
 
 android {
     namespace = "com.example.userinterfaceapp"
@@ -46,8 +47,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     implementation(libs.coil)

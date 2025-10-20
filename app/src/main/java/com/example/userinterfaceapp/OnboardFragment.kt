@@ -11,7 +11,7 @@ class OnboardFragment : BaseFragment() {
 
     // B: Настройка View Binding во фрагменте онбординга
     private var _binding: FragmentOnboardBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding ?: throw RuntimeException("Non-zero value was expected")
 
     override fun onCreateView(
         inflater: LayoutInflater,

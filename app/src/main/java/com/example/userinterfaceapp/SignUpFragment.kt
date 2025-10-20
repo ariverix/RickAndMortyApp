@@ -12,7 +12,7 @@ import com.example.userinterfaceapp.databinding.FragmentSignUpBinding
 class SignUpFragment : BaseFragment() {
 
     private var _binding: FragmentSignUpBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding?: throw RuntimeException("Non-zero value was expected")
     private lateinit var dbHelper: DBHelper
 
     override fun onCreateView(

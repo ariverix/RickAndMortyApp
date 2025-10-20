@@ -8,7 +8,6 @@
         android:id="@+id/onboardFragment"
         android:name="com.example.userinterfaceapp.OnboardFragment"
         android:label="Onboarding">
-        <!-- A: Переход от онбординга к экрану входа -->
         <action
             android:id="@+id/action_onboardFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
@@ -36,7 +35,6 @@
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
-        <!-- A: Настройка перехода к экрану Home с очисткой стека -->
         <action
             android:id="@+id/action_signInFragment_to_homeFragment"
             app:destination="@id/homeFragment"
@@ -48,10 +46,11 @@
         android:id="@+id/signUpFragment"
         android:name="com.example.userinterfaceapp.SignUpFragment"
         android:label="Sign Up">
-        <!-- A: Переход с экрана регистрации обратно на вход с Safe Args -->
         <action
             android:id="@+id/action_signUpFragment_to_signInFragment"
-            app:destination="@id/signInFragment" />
+            app:destination="@id/signInFragment"
+            app:popUpTo="@id/onboardFragment"
+            app:popUpToInclusive="false" />
     </fragment>
 
     <fragment

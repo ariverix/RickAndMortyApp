@@ -8,7 +8,7 @@
         android:id="@+id/onboardFragment"
         android:name="com.example.userinterfaceapp.OnboardFragment"
         android:label="Onboarding">
-        <!-- A: Описываем переход от онбординга к экрану входа -->
+        <!-- A: Переход от онбординга к экрану входа -->
         <action
             android:id="@+id/action_onboardFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
@@ -36,7 +36,7 @@
         <action
             android:id="@+id/action_signInFragment_to_signUpFragment"
             app:destination="@id/signUpFragment" />
-        <!-- A: Настраиваем переход к экрану Home с очисткой стека -->
+        <!-- A: Настройка перехода к экрану Home с очисткой стека -->
         <action
             android:id="@+id/action_signInFragment_to_homeFragment"
             app:destination="@id/homeFragment"

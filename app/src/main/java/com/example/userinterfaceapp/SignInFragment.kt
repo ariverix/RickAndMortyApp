@@ -15,7 +15,7 @@ class SignInFragment : BaseFragment() {
     private var _binding: FragmentSignInBinding? = null
     private val binding get() = _binding!!
     private lateinit var dbHelper: DBHelper
-    private val args: SignInFragmentArgs by navArgs() // A: Получаем данные через Safe Args
+    private val args: SignInFragmentArgs by navArgs() // A: Получение данные через Safe Args
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,7 +47,7 @@ class SignInFragment : BaseFragment() {
             if (dbHelper.checkUser(email, password)) {
                 logEvent("Вход успешен")
                 Toast.makeText(requireContext(), "Вход выполнен", Toast.LENGTH_SHORT).show()
-                // A: Используем NavController для перехода на экран Home
+                // A: NavController для перехода на экран Home
                 val action = SignInFragmentDirections.actionSignInFragmentToHomeFragment()
                 navController.navigate(action)
             } else {

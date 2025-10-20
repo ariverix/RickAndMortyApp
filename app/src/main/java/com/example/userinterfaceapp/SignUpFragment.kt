@@ -56,7 +56,7 @@ class SignUpFragment : BaseFragment() {
                     Toast.makeText(requireContext(), "Аккаунт создан", Toast.LENGTH_SHORT).show()
 
                     val user = User(name, email, password, age, gender)
-                    // A: Передаём данные на экран входа с помощью Safe Args
+                    // A: Передача данных на экран входа с помощью Safe Args
                     val action = SignUpFragmentDirections.actionSignUpFragmentToSignInFragment(
                         userName = name,
                         userEmail = email,

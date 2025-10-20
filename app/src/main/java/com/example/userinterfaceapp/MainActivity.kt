@@ -20,7 +20,7 @@ class MainActivity : BaseActivity() {
 
         Log.d(logTag, "onCreate() завершён")
 
-        // A: Инициализируем NavController через NavHostFragment
+        // A: Инициализация NavController через NavHostFragment
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.fragment_container) as NavHostFragment
         navController = navHostFragment.navController

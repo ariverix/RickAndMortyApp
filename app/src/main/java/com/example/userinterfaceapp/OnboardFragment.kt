@@ -9,7 +9,7 @@ import com.example.userinterfaceapp.databinding.FragmentOnboardBinding
 
 class OnboardFragment : BaseFragment() {
 
-    // B: Настраиваем View Binding во фрагменте онбординга
+    // B: Настройка View Binding во фрагменте онбординга
     private var _binding: FragmentOnboardBinding? = null
     private val binding get() = _binding!!
 
